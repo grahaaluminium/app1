@@ -19,10 +19,13 @@ data3 = yf.download(ticker3, start="2020-01-01", end="2023-01-01")
 start_date = max(data1.index.min(), data2.index.min(), data3.index.min())
 end_date = min(data1.index.max(), data2.index.max(), data3.index.max())
 
+st.write(start_date)
+st.write(end_date)
 # Memfilter data berdasarkan rentang tanggal yang sama
 data1_filtered = data1[(data1.index >= start_date) & (data1.index <= end_date)]
 data2_filtered = data2[(data2.index >= start_date) & (data2.index <= end_date)]
 data3_filtered = data3[(data3.index >= start_date) & (data3.index <= end_date)]
+st.write(data1_filtered)
 
 # Menggabungkan data harga penutupan ke dalam satu DataFrame
 closing_prices = pd.DataFrame({
