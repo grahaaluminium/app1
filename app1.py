@@ -135,10 +135,10 @@ if test_button:
         portfolio_data, portfolio_ticker = [], []
         if dropdown_dataSource == 'Yahoo Finance':
             for ticker in yahoo_ticker:
-                st.write(ticker.split(',')[0])
-                ticker_data1 = yf.download("aapl", period="max")
-                st.write(ticker_data1)
-                ticker_data = yf.download(ticker.split(',')[0], period="max")
+                st.write(ticker.split('.')[0])
+                # ticker_data1 = yf.download("aapl", period="max")
+                # st.write(ticker_data1)
+                ticker_data = yf.download(ticker.split('.')[0], period="max")
                 st.write(ticker_data)
                 if len(ticker_data) > 100 and ticker not in portfolio_ticker:
                     ticker_data.set_index(pd.to_datetime(ticker_data['Date']), inplace=True)
