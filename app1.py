@@ -137,6 +137,7 @@ if test_button:
             for ticker in yahoo_ticker:
                 st.write(ticker.split(',')[0])
                 ticker_data = yf.download(ticker.split(',')[0], period="max")
+                st.write(ticker_data)
                 if len(ticker_data) > 100 and ticker not in portfolio_ticker:
                     ticker_data.set_index(pd.to_datetime(ticker_data['Date']), inplace=True)
                     portfolio_data.append(ticker_data['Close'])
