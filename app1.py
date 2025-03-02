@@ -172,115 +172,115 @@ if test_button:
         # else :
         #     for i in range(100):
         #         time.sleep(0.01) 
-        def calculate_statistics(df):
-            # Menghitung beberapa statistik dasar
-            stats = {
-                'Total Return': df['Return'].sum(),
-                'Annualized Return': df['Return'].mean() * 252,  # Asumsikan 252 hari perdagangan per tahun
-                'CAGR': (df['Total Value'].iloc[-1] / df['Total Value'].iloc[0]) ** (1 / (len(df) / 252)) - 1,  # Compound Annual Growth Rate
-                'Max Drawdown': (df['Total Value'].cummax() - df['Total Value']).max(),
-                'Sharpe Ratio': df['Return'].mean() / df['Return'].std() * np.sqrt(252)  # Sharpe ratio, asumsikan risk-free rate 0
-            }
-            return stats
+        # def calculate_statistics(df):
+        #     # Menghitung beberapa statistik dasar
+        #     stats = {
+        #         'Total Return': df['Return'].sum(),
+        #         'Annualized Return': df['Return'].mean() * 252,  # Asumsikan 252 hari perdagangan per tahun
+        #         'CAGR': (df['Total Value'].iloc[-1] / df['Total Value'].iloc[0]) ** (1 / (len(df) / 252)) - 1,  # Compound Annual Growth Rate
+        #         'Max Drawdown': (df['Total Value'].cummax() - df['Total Value']).max(),
+        #         'Sharpe Ratio': df['Return'].mean() / df['Return'].std() * np.sqrt(252)  # Sharpe ratio, asumsikan risk-free rate 0
+        #     }
+        #     return stats
 
-        # Fungsi untuk menampilkan grafik perbandingan
-        def plot_comparison(df1, df2, stat_name):
-            stat1 = df1[stat_name]
-            stat2 = df2[stat_name]
-            plt.figure(figsize=(10, 6))
-            plt.plot(df1['Date'], stat1, label="Sistem Trading 1", color='blue')
-            plt.plot(df2['Date'], stat2, label="Sistem Trading 2", color='red')
-            plt.title(f'Perbandingan {stat_name}')
-            plt.xlabel('Tanggal')
-            plt.ylabel(stat_name)
-            plt.legend()
-            st.pyplot(plt)
+        # # Fungsi untuk menampilkan grafik perbandingan
+        # def plot_comparison(df1, df2, stat_name):
+        #     stat1 = df1[stat_name]
+        #     stat2 = df2[stat_name]
+        #     plt.figure(figsize=(10, 6))
+        #     plt.plot(df1['Date'], stat1, label="Sistem Trading 1", color='blue')
+        #     plt.plot(df2['Date'], stat2, label="Sistem Trading 2", color='red')
+        #     plt.title(f'Perbandingan {stat_name}')
+        #     plt.xlabel('Tanggal')
+        #     plt.ylabel(stat_name)
+        #     plt.legend()
+        #     st.pyplot(plt)
 
-        # Data simulasi (Anda bisa mengganti dengan data asli dari sistem trading)
-        dates = pd.date_range('2021-01-01', periods=500, freq='B')  # 500 hari perdagangan
-        returns1 = np.random.randn(500) / 100  # Simulasi return sistem trading 1
-        returns2 = np.random.randn(500) / 100  # Simulasi return sistem trading 2
+        # # Data simulasi (Anda bisa mengganti dengan data asli dari sistem trading)
+        # dates = pd.date_range('2021-01-01', periods=500, freq='B')  # 500 hari perdagangan
+        # returns1 = np.random.randn(500) / 100  # Simulasi return sistem trading 1
+        # returns2 = np.random.randn(500) / 100  # Simulasi return sistem trading 2
 
-        # Membuat dataframe untuk sistem trading 1
-        df1 = pd.DataFrame({
-            'Date': dates,
-            'Return': returns1
-        })
-        # Memastikan tidak ada NaN dalam 'Return' sebelum melakukan perhitungan
-        df1['Return'] = df1['Return'].fillna(0)
-        df1['Total Value'] = (1 + df1['Return']).cumprod()  # Total Value sebagai hasil dari return kumulatif
+        # # Membuat dataframe untuk sistem trading 1
+        # df1 = pd.DataFrame({
+        #     'Date': dates,
+        #     'Return': returns1
+        # })
+        # # Memastikan tidak ada NaN dalam 'Return' sebelum melakukan perhitungan
+        # df1['Return'] = df1['Return'].fillna(0)
+        # df1['Total Value'] = (1 + df1['Return']).cumprod()  # Total Value sebagai hasil dari return kumulatif
 
-        # Membuat dataframe untuk sistem trading 2
-        df2 = pd.DataFrame({
-            'Date': dates,
-            'Return': returns2
-        })
-        # Memastikan tidak ada NaN dalam 'Return' sebelum melakukan perhitungan
-        df2['Return'] = df2['Return'].fillna(0)
-        df2['Total Value'] = (1 + df2['Return']).cumprod()  # Total Value sebagai hasil dari return kumulatif
+        # # Membuat dataframe untuk sistem trading 2
+        # df2 = pd.DataFrame({
+        #     'Date': dates,
+        #     'Return': returns2
+        # })
+        # # Memastikan tidak ada NaN dalam 'Return' sebelum melakukan perhitungan
+        # df2['Return'] = df2['Return'].fillna(0)
+        # df2['Total Value'] = (1 + df2['Return']).cumprod()  # Total Value sebagai hasil dari return kumulatif
 
-        # Membuat dan menampilkan progress bar
-        with st.spinner("Proses Data... Harap tunggu..."):
+        # # Membuat dan menampilkan progress bar
+        # with st.spinner("Proses Data... Harap tunggu..."):
 
-            # Menghitung statistik untuk kedua sistem trading
-            stats1 = calculate_statistics(df1)
-            stats2 = calculate_statistics(df2)
+        #     # Menghitung statistik untuk kedua sistem trading
+        #     stats1 = calculate_statistics(df1)
+        #     stats2 = calculate_statistics(df2)
 
-            # Menampilkan header dengan statistik
-            st.title("Perbandingan Kinerja Dua Sistem Trading")
+        #     # Menampilkan header dengan statistik
+        #     st.title("Perbandingan Kinerja Dua Sistem Trading")
 
-            # Membuat DataFrame perbandingan untuk tampilan yang lebih menarik
-            comparison_df = pd.DataFrame({
-                'Statistik': ['Total Return', 'Annualized Return', 'CAGR', 'Max Drawdown', 'Sharpe Ratio'],
-                'Sistem Trading 1': [stats1['Total Return'], stats1['Annualized Return'], stats1['CAGR'], stats1['Max Drawdown'], stats1['Sharpe Ratio']],
-                'Sistem Trading 2': [stats2['Total Return'], stats2['Annualized Return'], stats2['CAGR'], stats2['Max Drawdown'], stats2['Sharpe Ratio']]
-            })
+        #     # Membuat DataFrame perbandingan untuk tampilan yang lebih menarik
+        #     comparison_df = pd.DataFrame({
+        #         'Statistik': ['Total Return', 'Annualized Return', 'CAGR', 'Max Drawdown', 'Sharpe Ratio'],
+        #         'Sistem Trading 1': [stats1['Total Return'], stats1['Annualized Return'], stats1['CAGR'], stats1['Max Drawdown'], stats1['Sharpe Ratio']],
+        #         'Sistem Trading 2': [stats2['Total Return'], stats2['Annualized Return'], stats2['CAGR'], stats2['Max Drawdown'], stats2['Sharpe Ratio']]
+        #     })
 
-            # Menambahkan kolom 'Perbedaan (%)' untuk menghitung selisih persentase
-            comparison_df['Perbedaan (%)'] = ((comparison_df['Sistem Trading 2'] - comparison_df['Sistem Trading 1']) / comparison_df['Sistem Trading 1']) * 100
+        #     # Menambahkan kolom 'Perbedaan (%)' untuk menghitung selisih persentase
+        #     comparison_df['Perbedaan (%)'] = ((comparison_df['Sistem Trading 2'] - comparison_df['Sistem Trading 1']) / comparison_df['Sistem Trading 1']) * 100
 
-            # Menampilkan perbandingan dalam bentuk tabel
-            st.header("Perbandingan Kinerja (Statistik)")
-            st.dataframe(comparison_df.style.format({
-                'Sistem Trading 1': '{:.2%}',
-                'Sistem Trading 2': '{:.2%}',
-                'Perbedaan (%)': '{:.2f}%'  # Menampilkan perbedaan dalam persen dengan 2 angka desimal
-            }))
+        #     # Menampilkan perbandingan dalam bentuk tabel
+        #     st.header("Perbandingan Kinerja (Statistik)")
+        #     st.dataframe(comparison_df.style.format({
+        #         'Sistem Trading 1': '{:.2%}',
+        #         'Sistem Trading 2': '{:.2%}',
+        #         'Perbedaan (%)': '{:.2f}%'  # Menampilkan perbedaan dalam persen dengan 2 angka desimal
+        #     }))
 
-            # Membuat pilihan tab dengan st.tabs()
-            tabs = st.tabs(["Total Return", "Annualized Return", "CAGR", "Max Drawdown", "Sharpe Ratio"])
+        #     # Membuat pilihan tab dengan st.tabs()
+        #     tabs = st.tabs(["Total Return", "Annualized Return", "CAGR", "Max Drawdown", "Sharpe Ratio"])
 
-            # Menampilkan grafik per statistik berdasarkan tab yang dipilih
-            with tabs[0]:
-                plot_comparison(df1, df2, 'Return')
-            with tabs[1]:
-                # Membuat grafik untuk Annualized Return
-                df1['Annualized Return'] = df1['Return'].mean() * 252
-                df2['Annualized Return'] = df2['Return'].mean() * 252
-                plot_comparison(df1, df2, 'Annualized Return')
-            with tabs[2]:
-                # Membuat grafik untuk CAGR
-                df1['CAGR'] = (df1['Total Value'].iloc[-1] / df1['Total Value'].iloc[0]) ** (1 / (len(df1) / 252)) - 1
-                df2['CAGR'] = (df2['Total Value'].iloc[-1] / df2['Total Value'].iloc[0]) ** (1 / (len(df2) / 252)) - 1
-                plot_comparison(df1, df2, 'CAGR')
-            with tabs[3]:
-                # Membuat grafik untuk Max Drawdown
-                df1['Max Drawdown'] = df1['Total Value'].cummax() - df1['Total Value']
-                df2['Max Drawdown'] = df2['Total Value'].cummax() - df2['Total Value']
-                plot_comparison(df1, df2, 'Max Drawdown')
-            with tabs[4]:
-                # Membuat grafik untuk Sharpe Ratio
-                df1['Sharpe Ratio'] = df1['Return'].mean() / df1['Return'].std() * np.sqrt(252)
-                df2['Sharpe Ratio'] = df2['Return'].mean() / df2['Return'].std() * np.sqrt(252)
-                plot_comparison(df1, df2, 'Sharpe Ratio')
+        #     # Menampilkan grafik per statistik berdasarkan tab yang dipilih
+        #     with tabs[0]:
+        #         plot_comparison(df1, df2, 'Return')
+        #     with tabs[1]:
+        #         # Membuat grafik untuk Annualized Return
+        #         df1['Annualized Return'] = df1['Return'].mean() * 252
+        #         df2['Annualized Return'] = df2['Return'].mean() * 252
+        #         plot_comparison(df1, df2, 'Annualized Return')
+        #     with tabs[2]:
+        #         # Membuat grafik untuk CAGR
+        #         df1['CAGR'] = (df1['Total Value'].iloc[-1] / df1['Total Value'].iloc[0]) ** (1 / (len(df1) / 252)) - 1
+        #         df2['CAGR'] = (df2['Total Value'].iloc[-1] / df2['Total Value'].iloc[0]) ** (1 / (len(df2) / 252)) - 1
+        #         plot_comparison(df1, df2, 'CAGR')
+        #     with tabs[3]:
+        #         # Membuat grafik untuk Max Drawdown
+        #         df1['Max Drawdown'] = df1['Total Value'].cummax() - df1['Total Value']
+        #         df2['Max Drawdown'] = df2['Total Value'].cummax() - df2['Total Value']
+        #         plot_comparison(df1, df2, 'Max Drawdown')
+        #     with tabs[4]:
+        #         # Membuat grafik untuk Sharpe Ratio
+        #         df1['Sharpe Ratio'] = df1['Return'].mean() / df1['Return'].std() * np.sqrt(252)
+        #         df2['Sharpe Ratio'] = df2['Return'].mean() / df2['Return'].std() * np.sqrt(252)
+        #         plot_comparison(df1, df2, 'Sharpe Ratio')
 
-            # Tombol untuk mengatur ulang aplikasi ke posisi awal
-            st.download_button(
-                label="Unduh Hasil Perbandingan Kinerja (CSV)",  # Label untuk tombol
-                data=comparison_df.to_csv(index=False).encode('utf-8'),  # Data yang akan diunduh
-                file_name="perbandingan_kinerja.csv",  # Nama file yang akan diunduh
-                mime="text/csv"  # MIME type untuk file CSV
-            )
+        #     # Tombol untuk mengatur ulang aplikasi ke posisi awal
+        #     st.download_button(
+        #         label="Unduh Hasil Perbandingan Kinerja (CSV)",  # Label untuk tombol
+        #         data=comparison_df.to_csv(index=False).encode('utf-8'),  # Data yang akan diunduh
+        #         file_name="perbandingan_kinerja.csv",  # Nama file yang akan diunduh
+        #         mime="text/csv"  # MIME type untuk file CSV
+        #     )
             st.button("Reset", on_click=swap)
     else:
         error_message = st.error("Portfolio data anda belum ada atau belum dibuat !")    
