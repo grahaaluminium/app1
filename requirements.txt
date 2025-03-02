@@ -1,2 +1,6 @@
 streamlit
 yfinance
+pandas
+pandas_datareader
+requests
+matplotlib
