@@ -25,13 +25,13 @@ st.write(end_date)
 data1_filtered = data1[(data1.index >= start_date) & (data1.index <= end_date)]
 data2_filtered = data2[(data2.index >= start_date) & (data2.index <= end_date)]
 data3_filtered = data3[(data3.index >= start_date) & (data3.index <= end_date)]
-st.write(data1_filtered['Close']['AAPL'])
+st.write(data1_filtered['Close'][ticker1])
 
 # Menggabungkan data harga penutupan ke dalam satu DataFrame
 closing_prices = pd.DataFrame({
-    ticker1: data1_filtered['Close'],
-    ticker2: data2_filtered['Close'],
-    ticker3: data3_filtered['Close']
+    ticker1: data1_filtered['Close'][ticker1],
+    ticker2: data2_filtered['Close'][ticker2],
+    ticker3: data3_filtered['Close'][ticker3]
 })
 
 # Menampilkan tabel harga penutupan
