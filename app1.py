@@ -139,7 +139,7 @@ if test_button:
                 # ticker_data1 = yf.download("aapl", period="max")
                 # st.write(ticker_data1)
                 ticker_data = yf.download(ticker.split('.')[0], period="max")
-                st.write(ticker_data)
+                # st.write(ticker_data)
                 if len(ticker_data) > 100 and ticker not in portfolio_ticker:
                     # ticker_data.set_index(pd.to_datetime(ticker_data['Date']), inplace=True)
                     portfolio_data.append(ticker_data['Close'])
@@ -155,6 +155,7 @@ if test_button:
                 ticker = uploaded_file.name.rsplit('.', 1)[0]
                 if len(ticker_data) > 0 and ticker not in portfolio_ticker:
                     portfolio_data.append(ticker_data['Close'])
+                    st.write(ticker_data['Close'])
                     portfolio_ticker.append(ticker)
         st.write(portfolio_data)
         if len(portfolio_data) >= 5:
@@ -164,6 +165,7 @@ if test_button:
             st.write(test_end_date)
             date_range = pd.date_range(test_start_date, test_end_date)
             date_range = date_range[~date_range.weekday.isin([5, 6])]
+            st.write(date_range)
             test_data = pd.DataFrame([
                 [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
                 for test_date in date_range
