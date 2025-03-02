@@ -130,10 +130,12 @@ test_button = st.button("Connect to QuantGenius AI engine for real-time trade si
 n=0
 
 if test_button:
+    st.write(len(yahoo_ticker))
     if len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
         if dropdown_dataSource == 'Yahoo Finance':
             for ticker in yahoo_ticker:
+                st.write(len(ticker.split(',')[1]))
                 ticker_data = yf.download(ticker.split(',')[1], period="max")
                 if len(ticker_data) > 100 and ticker not in portfolio_ticker:
                     ticker_data.set_index(pd.to_datetime(ticker_data['Date']), inplace=True)
