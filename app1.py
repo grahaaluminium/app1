@@ -136,6 +136,8 @@ if test_button:
         if dropdown_dataSource == 'Yahoo Finance':
             for ticker in yahoo_ticker:
                 st.write(ticker.split(',')[0])
+                ticker_data1 = yf.download("aapl", period="max")
+                st.write(ticker_data1)
                 ticker_data = yf.download(ticker.split(',')[0], period="max")
                 st.write(ticker_data)
                 if len(ticker_data) > 100 and ticker not in portfolio_ticker:
