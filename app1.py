@@ -142,8 +142,8 @@ if test_button:
                 # st.write(ticker_data)
                 if len(ticker_data) > 100 and ticker not in portfolio_ticker:
                     # ticker_data.set_index(pd.to_datetime(ticker_data['Date']), inplace=True)
-                    st.write(ticker_data['Close'])
-                    portfolio_data.append(ticker_data['Close'])
+                    # st.write(ticker_data['Close'])
+                    portfolio_data.append(ticker_data['Close'][ticker])
                     portfolio_ticker.append(ticker)
                     st.write(ticker_data)
                 else:
