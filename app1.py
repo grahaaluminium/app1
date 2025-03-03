@@ -112,9 +112,9 @@ elif dropdown_dataSource == 'Alphavantage':
     randomStockAlphavantage_button = st.button("Choose Random Stocks")
 
 # Connect to QuantGenius AI Engine
-test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
+createData_button = st.button("Create Test Data")
 
-if test_button:
+if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
         for ticker in yahoo_ticker:
@@ -137,7 +137,9 @@ if test_button:
             ], index=date_range.date)
             st.write(test_data)
 
-            st.button("Reset", on_click=swap)
+            if st.button("Connect to QuantGenius AI engine for real-time trade signals"):
+                st.success("Proses selesai!")
+                st.button("Reset", on_click=swap)
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
     else:
