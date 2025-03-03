@@ -134,6 +134,8 @@ if test_button:
             st.write(test_data)
 
             st.button("Reset", on_click=swap)
+        else:
+            st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
 
