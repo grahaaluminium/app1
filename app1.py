@@ -37,6 +37,9 @@ def sidebar_menu():
 # Display sidebar
 sidebar_menu()
 
+def swap():
+    st.session_state.target_lang = 'Yahoo Finance'
+
 # Data Source Selection
 dropdown_dataSource = st.selectbox('Select Data Source', options=['Yahoo Finance', 'Stooq', 'Tiingo', 'Alphavantage', 'Montecarlo Simulation', 'Local Data'], key="target_lang")  
 
