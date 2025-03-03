@@ -122,7 +122,7 @@ if test_button:
             except Exception as e:
                 st.error(f"Error downloading data for {ticker}: {e}")
         
-        if len(portfolio_data) >= 5:
+        if len(portfolio_data) == 30:
             test_start_date = max([data.index.min() for data in portfolio_data])
             test_end_date = min([data.index.max() for data in portfolio_data])
             date_range = pd.date_range(test_start_date, test_end_date)
@@ -132,6 +132,8 @@ if test_button:
                 for test_date in date_range
             ], index=date_range.date)
             st.write(test_data)
+
+            st.button("Reset", on_click=swap)
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
 
