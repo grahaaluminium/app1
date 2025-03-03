@@ -94,7 +94,7 @@ elif dropdown_dataSource == 'Yahoo Finance':
     if len(yahoo_ticker) > 30:
         st.error("Ticker yang anda pilih lebih dari 30")
     elif len(yahoo_ticker) == 30:
-        st.success("Proses selesai!")
+        st.success("Proses selesai, mohon tunggu sampai data test anda selesai dibuat")
 
 # Handle other data sources
 elif dropdown_dataSource == 'Stooq':
@@ -138,8 +138,8 @@ if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         st.write(test_data)
 
     if st.button("Connect to QuantGenius AI engine for real-time trade signals"):
-            st.success("Proses selesai!")
-            # st.button("Reset", on_click=swap)
+        st.success("Proses selesai!")
+        st.button("Reset", on_click=swap)
     else:
         st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
 else:
