@@ -117,7 +117,7 @@ if test_button:
             try:
                 ticker_data = yf.download(ticker.split('.')[0], period="max")
                 if len(ticker_data) > 100 and ticker not in portfolio_ticker:
-                    portfolio_data.append(ticker_data['Close'])
+                    portfolio_data.append(ticker_data['Close'][ticker.split('.')[0].upper()])
                     portfolio_ticker.append(ticker)
             except Exception as e:
                 st.error(f"Error downloading data for {ticker}: {e}")
