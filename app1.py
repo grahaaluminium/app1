@@ -59,7 +59,16 @@ if dropdown_dataSource == 'Local Data':
 # Handle Yahoo Finance
 elif dropdown_dataSource == 'Yahoo Finance':
     dropdown_yahooExchange = st.selectbox('Select Exchange', options=['nasdaq', 'nyse', 'nysemkt'])
-    start_year = st.selectbox("Start Year:", options=[str(year) for year in range(1991, 2015)], index=0)
+    
+    # Dropdown untuk memilih tahun mulai
+    start_year = st.selectbox("Start Year:", options=[str(year) for year in range(1991, 2015)], index=0, key="start_year")
+    
+    # Reset session state jika start_year berubah
+    if "previous_start_year" not in st.session_state:
+        st.session_state.previous_start_year = start_year
+    if st.session_state.previous_start_year != start_year:
+        st.session_state.yahoo_ticker = []  # Reset session state
+        st.session_state.previous_start_year = start_year  # Update previous_start_year
     
     # Filter options based on start year
     ticker_data = data_yfinance_ticker
