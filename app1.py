@@ -103,13 +103,10 @@ elif dropdown_dataSource == 'Yahoo Finance':
     # Membuat multiple select
     if dropdown_yahooExchange == 'nasdaq':                
         if st.button('Choose Random Stocks'):
-            st.write(start_year)
-            st.session_state.yahoo_ticker = random.sample(options, 30)
+            options_default = [stock for stock in ticker_data[dropdown_yahooExchange].dropna().tolist()]
+            st.session_state.yahoo_ticker = random.sample(options_default, 30)
         if 'yahoo_ticker' not in st.session_state:
             st.session_state.yahoo_ticker = []
-        if not isinstance(st.session_state.yahoo_ticker, list):
-            st.session_state.yahoo_ticker = []
-
         yahoo_ticker = st.multiselect('Select 30 Stocks or click `Choose Random Stocks` above', options, default=st.session_state.yahoo_ticker)
         # if len(yahoo_ticker) > 30:            
         #     st.error("Ticker yang anda pilih lebih dari 30")
