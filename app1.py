@@ -94,6 +94,7 @@ elif dropdown_dataSource == 'Yahoo Finance':
 
     # Dropdown untuk memilih tahun mulai
     start_year = st.selectbox("Start Year:", options=[str(year) for year in range(1991, 2015)], index=0)
+    st.write(start_year)
     
     ticker_data = data_yfinance_ticker
     options = [stock for stock in ticker_data[dropdown_yahooExchange].dropna().tolist() if dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
@@ -102,6 +103,7 @@ elif dropdown_dataSource == 'Yahoo Finance':
     # Membuat multiple select
     if dropdown_yahooExchange == 'nasdaq':                
         if st.button('Choose Random Stocks'):
+            st.write(start_year)
             st.session_state.yahoo_ticker = random.sample(options, 30)
         if 'yahoo_ticker' not in st.session_state:
             st.session_state.yahoo_ticker = []
