@@ -114,9 +114,10 @@ elif dropdown_dataSource == 'Alphavantage':
 # Connect to QuantGenius AI Engine
 createData_button = st.button("Create Test Data")
 
+portfolio_data, portfolio_ticker = [], []
 if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
-        portfolio_data, portfolio_ticker = [], []
+        
         for ticker in yahoo_ticker:
             try:
                 ticker_data = yf.download(ticker.split('.')[0], period="max")
