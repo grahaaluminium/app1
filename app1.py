@@ -119,7 +119,7 @@ elif dropdown_dataSource == 'Yahoo Finance':
                     ], index=date_range.date)
                     st.write(test_data)
 
-                if st.button("Connect to QuantGenius AI engine for real-time trade signals"):
+                    if st.button("Connect to QuantGenius AI engine for real-time trade signals"):
                         st.success("Proses selesai!")
                         # st.button("Reset", on_click=swap)
                 else:
