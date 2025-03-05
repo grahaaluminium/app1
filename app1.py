@@ -94,7 +94,7 @@ elif dropdown_dataSource == 'Yahoo Finance':
     if len(yahoo_ticker) > 30:
         st.error("Ticker yang anda pilih lebih dari 30")
     elif len(yahoo_ticker) == 30:
-        st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
+        # st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
 
         # if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
