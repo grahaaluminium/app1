@@ -1,7 +1,5 @@
 import streamlit as st
-import time
 import pandas as pd
-import numpy as np
 import random
 import datetime as dt
 import yfinance as yf
@@ -95,21 +93,6 @@ elif dropdown_dataSource == 'Yahoo Finance':
     elif len(yahoo_ticker) == 30:
         st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
 
-# Handle other data sources
-elif dropdown_dataSource == 'Stooq':
-    stooq_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
-    randomStockStooq_button = st.button("Choose Random Stocks")
-
-elif dropdown_dataSource == 'Tiingo':
-    tiingo_apikey = st.text_input('Masukkan Tiingo Api Key anda', placeholder='1234567890abcdefghijklmnopqrstuvwxyzABCDRFGHIJKLMNOPQRSTUVWXYZ')
-    tiingo_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
-    randomStockTiingo_button = st.button("Choose Random Stocks")
-
-elif dropdown_dataSource == 'Alphavantage':
-    alphavantage_apikey = st.text_input('Masukkan Alphavantage Api Key anda', placeholder='1234567890abcdefghijklmnopqrstuvwxyzABCDRFGHIJKLMNOPQRSTUVWXYZ')
-    alphavantage_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
-    randomStockAlphavantage_button = st.button("Choose Random Stocks")
-
 # Connect to QuantGenius AI Engine
 createData_button = st.button("Create Test Data")
 
@@ -134,6 +117,9 @@ if createData_button:
                 [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
                 for test_date in date_range
             ], index=date_range.date)
+            
+            # Simpan test_data ke session state
+            st.session_state.test_data = test_data
             st.write(test_data)
 
             test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
@@ -145,6 +131,11 @@ if createData_button:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
+
+# Tampilkan test_data dari session state jika ada
+if 'test_data' in st.session_state:
+    st.write("Data yang telah dibuat:")
+    st.write(st.session_state.test_data)
 
 # Footer
 st.markdown("""
