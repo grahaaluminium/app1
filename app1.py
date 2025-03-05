@@ -96,6 +96,37 @@ elif dropdown_dataSource == 'Yahoo Finance':
     elif len(yahoo_ticker) == 30:
         st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
 
+        if st.button("Create Test Data"):
+            if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
+                portfolio_data, portfolio_ticker = [], []
+                for ticker in yahoo_ticker:
+                    try:
+                        ticker_data = yf.download(ticker.split('.')[0], period="max")
+                        if len(ticker_data) > 100 and ticker not in portfolio_ticker:
+                            portfolio_data.append(ticker_data['Close'][ticker.split('.')[0].upper()])
+                            portfolio_ticker.append(ticker)
+                    except Exception as e:
+                        st.error(f"Error downloading data for {ticker}: {e}")
+                
+                if len(portfolio_data) == 30:
+                    test_start_date = max([data.index.min() for data in portfolio_data])
+                    test_end_date = min([data.index.max() for data in portfolio_data])
+                    date_range = pd.date_range(test_start_date, test_end_date)
+                    date_range = date_range[~date_range.weekday.isin([5, 6])]
+                    test_data = pd.DataFrame([
+                        [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
+                        for test_date in date_range
+                    ], index=date_range.date)
+                    st.write(test_data)
+
+                    if st.button("Connect to QuantGenius AI engine for real-time trade signals"):
+                        st.success("Proses selesai!")
+                        st.button("Reset", on_click=swap)
+                else:
+                    st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
+            else:
+                st.error("Portfolio data anda belum ada atau belum dibuat !")
+
 # Handle other data sources
 elif dropdown_dataSource == 'Stooq':
     stooq_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
@@ -112,38 +143,9 @@ elif dropdown_dataSource == 'Alphavantage':
     randomStockAlphavantage_button = st.button("Choose Random Stocks")
 
 # Connect to QuantGenius AI Engine
-createData_button = st.button("Create Test Data")
+# createData_button = st.button("Create Test Data")
 
-if createData_button:
-    if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
-        portfolio_data, portfolio_ticker = [], []
-        for ticker in yahoo_ticker:
-            try:
-                ticker_data = yf.download(ticker.split('.')[0], period="max")
-                if len(ticker_data) > 100 and ticker not in portfolio_ticker:
-                    portfolio_data.append(ticker_data['Close'][ticker.split('.')[0].upper()])
-                    portfolio_ticker.append(ticker)
-            except Exception as e:
-                st.error(f"Error downloading data for {ticker}: {e}")
-        
-        if len(portfolio_data) == 30:
-            test_start_date = max([data.index.min() for data in portfolio_data])
-            test_end_date = min([data.index.max() for data in portfolio_data])
-            date_range = pd.date_range(test_start_date, test_end_date)
-            date_range = date_range[~date_range.weekday.isin([5, 6])]
-            test_data = pd.DataFrame([
-                [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
-                for test_date in date_range
-            ], index=date_range.date)
-            st.write(test_data)
 
-            if st.button("Connect to QuantGenius AI engine for real-time trade signals"):
-                st.success("Proses selesai!")
-                st.button("Reset", on_click=swap)
-        else:
-            st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
-    else:
-        st.error("Portfolio data anda belum ada atau belum dibuat !")
 
 # Footer
 st.markdown("<p style='text-align: left; margin-top: 0px; font-size: 12px;'><i>- Learn more about this testing or how to use me in real trade<br>- Anda bisa mengecek HTTP network antara anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect. <a href='https://www.kompas.com' target='_blank'>Learn more</a><br>- Anda bisa mengecek HTTP network anatar anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect</i></p>", unsafe_allow_html=True)
