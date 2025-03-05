@@ -115,7 +115,6 @@ elif dropdown_dataSource == 'Alphavantage':
 createData_button = st.button("Create Test Data")
 
 portfolio_data, portfolio_ticker = [], []
-test_data = []
 if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         
@@ -137,19 +136,20 @@ if createData_button:
                 [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
                 for test_date in date_range
             ], index=date_range.date)
-            st.write(test_data)
-
+            
+            if st.write(test_data):
+                if st.button("Connect to QuantGenius AI engine for real-time trade signals"):
+                    if len(portfolio_data) == 30:
+                        st.success("Proses selesai!")
+                        st.button("Reset", on_click=swap)
+                    else:
+                        st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
             
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
 
-if st.button("Connect to QuantGenius AI engine for real-time trade signals"):
-    if len(portfolio_data) == 30:
-        st.success("Proses selesai!")
-        st.button("Reset", on_click=swap)
-    else:
-        st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
+
 # Footer
 st.markdown("<p style='text-align: left; margin-top: 0px; font-size: 12px;'><i>- Learn more about this testing or how to use me in real trade<br>- Anda bisa mengecek HTTP network antara anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect. <a href='https://www.kompas.com' target='_blank'>Learn more</a><br>- Anda bisa mengecek HTTP network anatar anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect</i></p>", unsafe_allow_html=True)
