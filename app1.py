@@ -121,7 +121,7 @@ elif dropdown_dataSource == 'Yahoo Finance':
 
                     if st.button("Connect to QuantGenius AI engine for real-time trade signals"):
                         st.success("Proses selesai!")
-                        st.button("Reset", on_click=swap)
+                        # st.button("Reset", on_click=swap)
                 else:
                     st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
             else:
