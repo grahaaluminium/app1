@@ -115,6 +115,7 @@ elif dropdown_dataSource == 'Alphavantage':
 createData_button = st.button("Create Test Data")
 
 portfolio_data, portfolio_ticker = [], []
+test_data = []
 if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         
