@@ -94,9 +94,28 @@ elif dropdown_dataSource == 'Yahoo Finance':
     if len(yahoo_ticker) > 30:
         st.error("Ticker yang anda pilih lebih dari 30")
     elif len(yahoo_ticker) == 30:
-        # st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
+        st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
 
-        # if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
+# Handle other data sources
+elif dropdown_dataSource == 'Stooq':
+    stooq_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
+    randomStockStooq_button = st.button("Choose Random Stocks")
+
+elif dropdown_dataSource == 'Tiingo':
+    tiingo_apikey = st.text_input('Masukkan Tiingo Api Key anda', placeholder='1234567890abcdefghijklmnopqrstuvwxyzABCDRFGHIJKLMNOPQRSTUVWXYZ')
+    tiingo_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
+    randomStockTiingo_button = st.button("Choose Random Stocks")
+
+elif dropdown_dataSource == 'Alphavantage':
+    alphavantage_apikey = st.text_input('Masukkan Alphavantage Api Key anda', placeholder='1234567890abcdefghijklmnopqrstuvwxyzABCDRFGHIJKLMNOPQRSTUVWXYZ')
+    alphavantage_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
+    randomStockAlphavantage_button = st.button("Choose Random Stocks")
+
+# Connect to QuantGenius AI Engine
+createData_button = st.button("Create Test Data")
+
+if createData_button:
+    if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
         for ticker in yahoo_ticker:
             try:
@@ -118,32 +137,13 @@ elif dropdown_dataSource == 'Yahoo Finance':
             ], index=date_range.date)
             st.write(test_data)
 
+            if st.button("Connect to QuantGenius AI engine for real-time trade signals"):
+                st.success("Proses selesai!")
+                st.button("Reset", on_click=swap)
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
-        # else:
-        #     st.error("Portfolio data anda belum ada atau belum dibuat !")
-
-# Handle other data sources
-elif dropdown_dataSource == 'Stooq':
-    stooq_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
-    randomStockStooq_button = st.button("Choose Random Stocks")
-
-elif dropdown_dataSource == 'Tiingo':
-    tiingo_apikey = st.text_input('Masukkan Tiingo Api Key anda', placeholder='1234567890abcdefghijklmnopqrstuvwxyzABCDRFGHIJKLMNOPQRSTUVWXYZ')
-    tiingo_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
-    randomStockTiingo_button = st.button("Choose Random Stocks")
-
-elif dropdown_dataSource == 'Alphavantage':
-    alphavantage_apikey = st.text_input('Masukkan Alphavantage Api Key anda', placeholder='1234567890abcdefghijklmnopqrstuvwxyzABCDRFGHIJKLMNOPQRSTUVWXYZ')
-    alphavantage_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
-    randomStockAlphavantage_button = st.button("Choose Random Stocks")
-
-# Connect to QuantGenius AI Engine
-test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
-
-if test_button:
-    st.success("Proses selesai!")
-    st.button("Reset", on_click=swap)
+    else:
+        st.error("Portfolio data anda belum ada atau belum dibuat !")
 
 # Footer
 st.markdown("<p style='text-align: left; margin-top: 0px; font-size: 12px;'><i>- Learn more about this testing or how to use me in real trade<br>- Anda bisa mengecek HTTP network antara anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect. <a href='https://www.kompas.com' target='_blank'>Learn more</a><br>- Anda bisa mengecek HTTP network anatar anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect</i></p>", unsafe_allow_html=True)
