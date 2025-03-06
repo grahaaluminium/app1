@@ -136,7 +136,7 @@ if 'test_data' in st.session_state:
     if test_button:
         st.success("Proses selesai!")
         st.button("Reset", on_click=swap)
-        st.session_state.test_data = []
+        st.session_state.test_data = None
 
 # Footer
 st.markdown("""
