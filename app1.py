@@ -128,8 +128,8 @@ if createData_button:
 
 # Tampilkan test_data dari session state jika ada
 if 'test_data' in st.session_state:
-    st.write("Data yang telah dibuat:")
-    st.write(st.session_state.test_data)
+    # st.write("Data yang telah dibuat:")
+    # st.write(st.session_state.test_data)
 
     test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
     if test_button:
