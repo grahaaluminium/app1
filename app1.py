@@ -139,6 +139,7 @@ if st.button("Create Test Data", disabled=st.session_state.button_disabled):
                 for test_date in date_range
             ], index=date_range.date)
             st.write(test_data)
+            st.session_state.button_disabled = False
 
             test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
 
@@ -147,6 +148,7 @@ if st.button("Create Test Data", disabled=st.session_state.button_disabled):
                 st.button("Reset", on_click=swap)
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
+            st.session_state.button_disabled = False
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
 
