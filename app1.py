@@ -36,7 +36,8 @@ sidebar_menu()
 
 def swap():
     st.session_state.target_lang = 'Yahoo Finance'
-    st.session_state.yahoo_ticker = []
+    del st.session_state.yahoo_ticker
+    del st.session_state.test_data
 
 # Data Source Selection
 dropdown_dataSource = st.selectbox('Select Data Source', options=['Yahoo Finance', 'Stooq', 'Tiingo', 'Alphavantage', 'Montecarlo Simulation', 'Local Data'], key="target_lang")  
@@ -135,8 +136,7 @@ if 'test_data' in st.session_state:
     test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
     if test_button:
         st.success("Proses selesai!")
-        st.button("Reset", on_click=swap)
-        st.session_state.test_data = None
+        st.button("Reset", on_click=swap)        
 
 # Footer
 st.markdown("""
