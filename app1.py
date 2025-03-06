@@ -94,6 +94,9 @@ elif dropdown_dataSource == 'Yahoo Finance':
     elif len(yahoo_ticker) == 30:
         st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
 
+if 'button_clicked' not in st.session_state:
+    st.session_state.button_clicked = False
+    
 def on_button_click():
     st.session_state.button_clicked = True
     # st.write("Tombol telah diklik!")
