@@ -125,12 +125,12 @@ if createData_button:
                 [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
                 for test_date in date_range
             ], index=date_range.date)
-            
+            st.session_state.button_clicked = False
             # Simpan test_data ke session state
             st.session_state.test_data = test_data
             # st.write(st.session_state.test_data)
             st.success("Data berhasil dibuat!")
-            st.session_state.button_clicked = False
+            
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
             st.session_state.button_clicked = False
