@@ -38,6 +38,7 @@ def swap():
     st.session_state.target_lang = 'Yahoo Finance'
     del st.session_state.yahoo_ticker
     del st.session_state.test_data
+    st.session_state.button_clicked = False
 
 # Data Source Selection
 dropdown_dataSource = st.selectbox('Select Data Source', options=['Yahoo Finance', 'Stooq', 'Tiingo', 'Alphavantage', 'Montecarlo Simulation', 'Local Data'], key="target_lang")  
@@ -96,7 +97,7 @@ elif dropdown_dataSource == 'Yahoo Finance':
 
 if 'button_clicked' not in st.session_state:
     st.session_state.button_clicked = False
-    
+
 def on_button_click():
     st.session_state.button_clicked = True
     # st.write("Tombol telah diklik!")
