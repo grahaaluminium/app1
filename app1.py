@@ -116,7 +116,7 @@ if 'button_disabled' not in st.session_state:
 # Connect to QuantGenius AI Engine
 # createData_button = st.button("Create Test Data", disabled=st.session_state.button_disabled)
 
-if st.button("Create Test Data", disabled=st.session_state.button_disabled = True):
+if st.button("Create Test Data", disabled=st.session_state.button_disabled == True):
     # st.session_state.button_disabled = True
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
