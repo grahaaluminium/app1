@@ -120,7 +120,7 @@ if st.button("Create Test Data", disabled=st.session_state.button_disabled):
     st.session_state.button_disabled = True
     st.rerun()  # Force rerun to update the button state immediately
 
-if st.session_state.button_disabled = True:
+if st.session_state.button_disabled == True:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
         for ticker in yahoo_ticker:
