@@ -5,70 +5,47 @@ import datetime as dt
 import yfinance as yf
 
 # Load ticker data
-def load_ticker_data():
-    return pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
-
-ticker_data = load_ticker_data()
+ticker_data = pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
 
 # UI Setup
-def setup_ui():
-    st.markdown(
-        "<div style='text-align: center; margin-top: -53px;'><img src='{}' width='120'></div>".format(
-            'https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'),
-        unsafe_allow_html=True)
-    st.markdown(
-        "<p style='text-align: center; margin-top: 10px; font-size: 18px;'>Test me using any stock from any data source, any exchange, over any period.</p>",
-        unsafe_allow_html=True)
+st.markdown("<div style='text-align: center; margin-top: -53px;'><img src='{}' width='120'></div>".format('https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'), unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; margin-top: 10px; font-size: 18px;'>Test me using any stock from any data source, any exchange, over any period.</p>", unsafe_allow_html=True)
 
 # Sidebar Menu
 def sidebar_menu():
-    st.sidebar.markdown(
-        "<div style='text-align: center; margin-top: -60px;'><img src='{}' width='150'></div>".format(
-            'https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'),
-        unsafe_allow_html=True)
-    st.sidebar.markdown("<p style='text-align: center;margin-top: 0px;font-size: 30px'><b>QUANTGENIUS</b></p>",
-                        unsafe_allow_html=True)
-    st.sidebar.markdown(
-        "<p style='text-align: center;margin-top: -20px;font-size: 20px'>Artificial Superintelligence Quantitative Trading System</p>",
-        unsafe_allow_html=True)
-
+    st.sidebar.markdown("<div style='text-align: center; margin-top: -60px;'><img src='{}' width='150'></div>".format('https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'), unsafe_allow_html=True)
+    st.sidebar.markdown("<p style='text-align: center;margin-top: 0px;font-size: 30px'><b>QUANTGENIUS</b></p>", unsafe_allow_html=True)
+    st.sidebar.markdown("<p style='text-align: center;margin-top: -20px;font-size: 20px'>Artificial Superintelligence Quantitative Trading System</p>", unsafe_allow_html=True)
+  
     with st.sidebar.expander("Input your QuantGenius API Key", expanded=False):
         api_key1 = st.text_input("Enter your QuantGenius API Key1", type="password")
         if api_key1:
             st.success("QuantGenius API Key successfully entered!")
-        st.markdown(
-            "<p style='margin-top: 0px;font-size: 12px'>Don't have QuantGenius API Key, please <a href='https://www.kompas.com' target='_blank'>click here</a></p>",
-            unsafe_allow_html=True)
-
+        st.markdown("<p style='margin-top: 0px;font-size: 12px'>Don't have QuantGenius API Key, please <a href='https://www.kompas.com' target='_blank'>click here</a></p>", unsafe_allow_html=True)
+        
     with st.sidebar.expander("Setting your test parameter", expanded=False):
-        dropdown_1 = st.selectbox('Initial Equity', options=[1000000, 2000000, 3000000, 4000000])
-        dropdown_2 = st.selectbox('Commision per trade', options=[0.001, 0.002, 0.003])
-        dropdown_3 = st.selectbox('Spread + Slippage per size', options=[0.001, 0.002, 0.003])
-        dropdown_4 = st.selectbox('Interest Rate per year', options=[0.02, 0.03, 0.04])
-        dropdown_5 = st.selectbox('Initial Margin Requirement', options=[0.1, 0.2, 0.3])
+        dropdown_1 = st.selectbox('Initial Equity', options=[1000000, 2000000, 3000000, 4000000])        
+        dropdown_2 = st.selectbox('Commision per trade', options=[0.001, 0.002, 0.003])        
+        dropdown_3 = st.selectbox('Spread + Slippage per size', options=[0.001, 0.002, 0.003])        
+        dropdown_4 = st.selectbox('Interest Rate per year', options=[0.02, 0.03, 0.04])        
+        dropdown_5 = st.selectbox('Initial Margin Requirement', options=[0.1, 0.2, 0.3])        
         dropdown_6 = st.selectbox('Margin Maintenance', options=[0.1, 0.2, 0.3])
 
 # Display sidebar
-setup_ui()
 sidebar_menu()
 
 def swap():
     st.session_state.target_lang = 'Yahoo Finance'
-    if 'yahoo_ticker' in st.session_state:
-        del st.session_state.yahoo_ticker
-    if 'test_data' in st.session_state:
-        del st.session_state.test_data
+    del st.session_state.yahoo_ticker
+    del st.session_state.test_data
     st.session_state.button_clicked = False
 
 # Data Source Selection
-dropdown_dataSource = st.selectbox('Select Data Source',
-                                  options=['Yahoo Finance', 'Stooq', 'Tiingo', 'Alphavantage', 'Montecarlo Simulation',
-                                           'Local Data'], key="target_lang")
+dropdown_dataSource = st.selectbox('Select Data Source', options=['Yahoo Finance', 'Stooq', 'Tiingo', 'Alphavantage', 'Montecarlo Simulation', 'Local Data'], key="target_lang")  
 
 # Handle Local Data
 if dropdown_dataSource == 'Local Data':
-    uploaded_files = st.file_uploader("Choose 30 stock file for your portfolio", type=["txt", "csv"],
-                                      accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Choose 30 stock file for your portfolio", type=["txt", "csv"], accept_multiple_files=True)
     if 'uploaded_files' not in st.session_state:
         st.session_state.uploaded_files = []
     if uploaded_files:
@@ -78,43 +55,40 @@ if dropdown_dataSource == 'Local Data':
             else:
                 st.session_state.uploaded_files.append(uploaded_file.name)
         if len(uploaded_files) < 4:
-            st.write(f"Total file yang dipilih kurang {4 - len(uploaded_files)} file")
+            st.write(f"Total file yang dipilih kurang {4-len(uploaded_files)} file")
         else:
             st.success("Proses selesai!")
 
 # Handle Yahoo Finance
 elif dropdown_dataSource == 'Yahoo Finance':
     dropdown_yahooExchange = st.selectbox('Select Exchange', options=['nasdaq', 'nyse', 'nysemkt'])
-
+    
     # Dropdown untuk memilih tahun mulai
     start_year = st.selectbox("Start Year:", options=[str(year) for year in range(1991, 2015)], index=0, key="start_year")
-
+    
     # Reset session state jika start_year berubah
     if "previous_start_year" not in st.session_state:
         st.session_state.previous_start_year = start_year
     if st.session_state.previous_start_year != start_year:
         st.session_state.yahoo_ticker = []  # Reset session state
         st.session_state.previous_start_year = start_year  # Update previous_start_year
-
+    
     # Filter options based on start year
-    options = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if
-               dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
-
+    options = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
+    
     # Initialize session state for yahoo_ticker
     if 'yahoo_ticker' not in st.session_state:
         st.session_state.yahoo_ticker = []
-
+    
     # Random stock selection
     if st.button('Choose Random Stocks'):
-        valid_tickers = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if
-                         dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
+        valid_tickers = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
         st.session_state.yahoo_ticker = random.sample(valid_tickers, 30)
-
+    
     # Multiselect widget with validated default values
     default_tickers = [ticker for ticker in st.session_state.yahoo_ticker if ticker in options]
-    yahoo_ticker = st.multiselect('Select 30 Stocks or click `Choose Random Stocks` above', options,
-                                  default=default_tickers)
-
+    yahoo_ticker = st.multiselect('Select 30 Stocks or click `Choose Random Stocks` above', options, default=default_tickers)
+    
     # Validate selection
     if len(yahoo_ticker) > 30:
         st.error("Ticker yang anda pilih lebih dari 30")
@@ -126,7 +100,7 @@ if 'button_clicked' not in st.session_state:
 
 def on_button_click():
     st.session_state.button_clicked = True
-
+    # st.write("Tombol telah diklik!")
 # Connect to QuantGenius AI Engine
 createData_button = st.button("Create Test Data", on_click=on_button_click, disabled=st.session_state.button_clicked)
 
@@ -141,24 +115,24 @@ if createData_button:
                     portfolio_ticker.append(ticker)
             except Exception as e:
                 st.error(f"Error downloading data for {ticker}: {e}")
-
+        
         if len(portfolio_data) == 30:
             test_start_date = max([data.index.min() for data in portfolio_data])
             test_end_date = min([data.index.max() for data in portfolio_data])
             date_range = pd.date_range(test_start_date, test_end_date)
             date_range = date_range[~date_range.weekday.isin([5, 6])]  # Exclude weekends
-            test_data = pd.DataFrame(
-                {
-                    ticker: data.reindex(date_range, method='ffill') for ticker, data in zip(portfolio_ticker, portfolio_data)
-                }
-            )
-
+            test_data = pd.DataFrame([
+                [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
+                for test_date in date_range
+            ], index=date_range.date)
+            
             # Simpan test_data ke session state
             st.session_state.test_data = test_data
+            # st.write(st.session_state.test_data)
             st.success("Data berhasil dibuat!")
             st.session_state.button_clicked = False
         else:
-            st.error(f"Portfolio data anda belum kurang {30 - len(portfolio_data)} !")
+            st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
             st.session_state.button_clicked = False
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
@@ -166,12 +140,13 @@ if createData_button:
 
 # Tampilkan test_data dari session state jika ada
 if 'test_data' in st.session_state:
+    # st.write("Data yang telah dibuat:")
     st.write(st.session_state.test_data)
 
     test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
     if test_button:
         st.success("Proses selesai!")
-        st.button("Reset", on_click=swap)
+        st.button("Reset", on_click=swap)        
 
 # Footer
 st.markdown("""
