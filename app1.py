@@ -120,7 +120,7 @@ if createData_button:
             
             # Simpan test_data ke session state
             st.session_state.test_data = test_data
-            st.write(st.session_state.test_data)
+            # st.write(st.session_state.test_data)
             st.success("Data berhasil dibuat!")
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
