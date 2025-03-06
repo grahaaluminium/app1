@@ -94,8 +94,11 @@ elif dropdown_dataSource == 'Yahoo Finance':
     elif len(yahoo_ticker) == 30:
         st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
 
+def on_button_click():
+    st.session_state.button_clicked = True
+    # st.write("Tombol telah diklik!")
 # Connect to QuantGenius AI Engine
-createData_button = st.button("Create Test Data")
+createData_button = st.button("Create Test Data", on_click=on_button_click, disabled=st.session_state.button_clicked)
 
 if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
