@@ -151,6 +151,7 @@ if st.button("Create Test Data", disabled=st.session_state.button_disabled):
             st.session_state.button_disabled = False
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
+        st.session_state.button_disabled = False
 
 # Footer
 st.markdown("<p style='text-align: left; margin-top: 0px; font-size: 12px;'><i>- Learn more about this testing or how to use me in real trade<br>- Anda bisa mengecek HTTP network antara anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect. <a href='https://www.kompas.com' target='_blank'>Learn more</a><br>- Anda bisa mengecek HTTP network anatar anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect</i></p>", unsafe_allow_html=True)
