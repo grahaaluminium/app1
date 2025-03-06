@@ -111,13 +111,13 @@ elif dropdown_dataSource == 'Alphavantage':
     alphavantage_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
     randomStockAlphavantage_button = st.button("Choose Random Stocks")
 
-if 'button_disabled' not in st.session_state:
-    st.session_state.button_disabled = False
+if 'button_disabled' in st.session_state:
+    st.session_state.button_disabled = True
 # Connect to QuantGenius AI Engine
 # createData_button = st.button("Create Test Data", disabled=st.session_state.button_disabled)
 
-if st.button("Create Test Data", disabled=st.session_state.button_disabled == True):
-    # st.session_state.button_disabled = True
+if st.button("Create Test Data", disabled=st.session_state.button_disabled):
+    st.session_state.button_disabled = True
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
         for ticker in yahoo_ticker:
@@ -139,7 +139,6 @@ if st.button("Create Test Data", disabled=st.session_state.button_disabled == Tr
                 for test_date in date_range
             ], index=date_range.date)
             st.write(test_data)
-            st.session_state.button_disabled = False
 
             test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
 
@@ -148,10 +147,8 @@ if st.button("Create Test Data", disabled=st.session_state.button_disabled == Tr
                 st.button("Reset", on_click=swap)
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
-            st.session_state.button_disabled = False
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
-        st.session_state.button_disabled = False
 
 # Footer
 st.markdown("<p style='text-align: left; margin-top: 0px; font-size: 12px;'><i>- Learn more about this testing or how to use me in real trade<br>- Anda bisa mengecek HTTP network antara anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect. <a href='https://www.kompas.com' target='_blank'>Learn more</a><br>- Anda bisa mengecek HTTP network anatar anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect</i></p>", unsafe_allow_html=True)
