@@ -1,14 +1,11 @@
 import streamlit as st
-import time
 import pandas as pd
-import numpy as np
 import random
 import datetime as dt
 import yfinance as yf
 
 # Load ticker data
-data_stooq_ticker = pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
-data_yfinance_ticker = pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
+ticker_data = pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
 
 # UI Setup
 st.markdown("<div style='text-align: center; margin-top: -53px;'><img src='{}' width='120'></div>".format('https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'), unsafe_allow_html=True)
@@ -47,11 +44,11 @@ dropdown_dataSource = st.selectbox('Select Data Source', options=['Yahoo Finance
 # Handle Local Data
 if dropdown_dataSource == 'Local Data':
     uploaded_files = st.file_uploader("Choose 30 stock file for your portfolio", type=["txt", "csv"], accept_multiple_files=True)
-    st.session_state.uploaded_files = []
+    if 'uploaded_files' not in st.session_state:
+        st.session_state.uploaded_files = []
     if uploaded_files:
         for uploaded_file in uploaded_files:
             if uploaded_file.name in st.session_state.uploaded_files:
-                st.session_state.uploaded_files.remove(uploaded_file.name)
                 st.error(f"File dengan nama '{uploaded_file.name}' sudah ada!, buang file tersebut")
             else:
                 st.session_state.uploaded_files.append(uploaded_file.name)
@@ -75,7 +72,6 @@ elif dropdown_dataSource == 'Yahoo Finance':
         st.session_state.previous_start_year = start_year  # Update previous_start_year
     
     # Filter options based on start year
-    ticker_data = data_yfinance_ticker
     options = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
     
     # Initialize session state for yahoo_ticker
@@ -84,7 +80,8 @@ elif dropdown_dataSource == 'Yahoo Finance':
     
     # Random stock selection
     if st.button('Choose Random Stocks'):
-        st.session_state.yahoo_ticker = random.sample(options, 30)
+        valid_tickers = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
+        st.session_state.yahoo_ticker = random.sample(valid_tickers, 30)
     
     # Multiselect widget with validated default values
     default_tickers = [ticker for ticker in st.session_state.yahoo_ticker if ticker in options]
@@ -95,21 +92,6 @@ elif dropdown_dataSource == 'Yahoo Finance':
         st.error("Ticker yang anda pilih lebih dari 30")
     elif len(yahoo_ticker) == 30:
         st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
-
-# Handle other data sources
-elif dropdown_dataSource == 'Stooq':
-    stooq_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
-    randomStockStooq_button = st.button("Choose Random Stocks")
-
-elif dropdown_dataSource == 'Tiingo':
-    tiingo_apikey = st.text_input('Masukkan Tiingo Api Key anda', placeholder='1234567890abcdefghijklmnopqrstuvwxyzABCDRFGHIJKLMNOPQRSTUVWXYZ')
-    tiingo_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
-    randomStockTiingo_button = st.button("Choose Random Stocks")
-
-elif dropdown_dataSource == 'Alphavantage':
-    alphavantage_apikey = st.text_input('Masukkan Alphavantage Api Key anda', placeholder='1234567890abcdefghijklmnopqrstuvwxyzABCDRFGHIJKLMNOPQRSTUVWXYZ')
-    alphavantage_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
-    randomStockAlphavantage_button = st.button("Choose Random Stocks")
 
 # Connect to QuantGenius AI Engine
 createData_button = st.button("Create Test Data")
@@ -130,22 +112,37 @@ if createData_button:
             test_start_date = max([data.index.min() for data in portfolio_data])
             test_end_date = min([data.index.max() for data in portfolio_data])
             date_range = pd.date_range(test_start_date, test_end_date)
-            date_range = date_range[~date_range.weekday.isin([5, 6])]
+            date_range = date_range[~date_range.weekday.isin([5, 6])]  # Exclude weekends
             test_data = pd.DataFrame([
                 [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
                 for test_date in date_range
             ], index=date_range.date)
-            st.write(test_data)
-
-            test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
-
-            if test_button:
-                st.success("Proses selesai!")
-                st.button("Reset", on_click=swap)
+            
+            # Simpan test_data ke session state
+            st.session_state.test_data = test_data
+            st.success("Data berhasil dibuat!")
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
 
+# Tampilkan test_data dari session state jika ada
+if 'test_data' in st.session_state:
+    st.write("Data yang telah dibuat:")
+    st.write(st.session_state.test_data)
+
+    test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
+    if test_button:
+        st.success("Proses selesai!")
+        st.button("Reset", on_click=swap)
+
 # Footer
-st.markdown("<p style='text-align: left; margin-top: 0px; font-size: 12px;'><i>- Learn more about this testing or how to use me in real trade<br>- Anda bisa mengecek HTTP network antara anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect. <a href='https://www.kompas.com' target='_blank'>Learn more</a><br>- Anda bisa mengecek HTTP network anatar anda dan QuantGenius dengan mengklik tombol kana dan pilih inspect</i></p>", unsafe_allow_html=True)
+st.markdown("""
+<p style='text-align: left; margin-top: 0px; font-size: 12px;'>
+    <i>
+        - Learn more about this testing or how to use me in real trade<br>
+        - Anda bisa mengecek HTTP network antara anda dan QuantGenius dengan mengklik tombol kanan dan pilih inspect. <a href='https://www.kompas.com' target='_blank'>Learn more</a><br>
+        - Anda bisa mengecek HTTP network antara anda dan QuantGenius dengan mengklik tombol kanan dan pilih inspect
+    </i>
+</p>
+""", unsafe_allow_html=True)
