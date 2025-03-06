@@ -147,10 +147,11 @@ if createData_button:
             test_end_date = min([data.index.max() for data in portfolio_data])
             date_range = pd.date_range(test_start_date, test_end_date)
             date_range = date_range[~date_range.weekday.isin([5, 6])]  # Exclude weekends
-            test_data = pd.DataFrame([
-                [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in
-                portfolio_data
-            ], index=date_range.date)
+            test_data = pd.DataFrame(
+                {
+                    ticker: data.reindex(date_range, method='ffill') for ticker, data in zip(portfolio_ticker, portfolio_data)
+                }
+            )
 
             # Simpan test_data ke session state
             st.session_state.test_data = test_data
