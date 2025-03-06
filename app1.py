@@ -79,12 +79,9 @@ elif dropdown_dataSource == 'Yahoo Finance':
     # Initialize session state for yahoo_ticker
     if 'yahoo_ticker' not in st.session_state:
         st.session_state.yahoo_ticker = []
-    if 'button_clicked' not in st.session_state:
-        st.session_state.button_clicked = False
     
     # Random stock selection
     if st.button('Choose Random Stocks'):
-        # st.session_state.button_clicked = False
         valid_tickers = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
         st.session_state.yahoo_ticker = random.sample(valid_tickers, 30)
     
@@ -97,6 +94,9 @@ elif dropdown_dataSource == 'Yahoo Finance':
         st.error("Ticker yang anda pilih lebih dari 30")
     elif len(yahoo_ticker) == 30:
         st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
+
+if 'button_clicked' not in st.session_state:
+    st.session_state.button_clicked = False
 
 def on_button_click():
     st.session_state.button_clicked = True
@@ -130,10 +130,13 @@ if createData_button:
             st.session_state.test_data = test_data
             # st.write(st.session_state.test_data)
             st.success("Data berhasil dibuat!")
+            st.session_state.button_clicked = False
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
+            st.session_state.button_clicked = False
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
+        st.session_state.button_clicked = False
 
 # Tampilkan test_data dari session state jika ada
 if 'test_data' in st.session_state:
