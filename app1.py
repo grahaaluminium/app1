@@ -111,6 +111,7 @@ elif dropdown_dataSource == 'Alphavantage':
     alphavantage_ticker = st.text_input('Masukkan 30 kode saham (dengan koma pemisah) atau klik "Random Stocks" above', placeholder='BBCA,BBRI,BMRI,TLKM,ASII,UNVR,PGAS,KLBF,GGRM,INDF,ACES,LPPF,CPIN,HMSP,EXCL,BDMN,MIKA,ADRO,PTPP,CTRA,WIKA,MEDC,BBNI,BIPI,BOLT,TPIA,SM')
     randomStockAlphavantage_button = st.button("Choose Random Stocks")
 
+st.session_state.button_disabled = True
 if 'button_disabled' not in st.session_state:
     st.session_state.button_disabled = False
 # Connect to QuantGenius AI Engine
