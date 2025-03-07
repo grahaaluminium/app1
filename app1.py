@@ -131,7 +131,7 @@ if createData_button:
             # st.session_state.button_clicked = False
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
-            # st.session_state.button_clicked = False
+            st.session_state.button_clicked = False
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
         # st.session_state.button_clicked = False
