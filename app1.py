@@ -3,6 +3,7 @@ import pandas as pd
 import random
 import datetime as dt
 import yfinance as yf
+import time
 
 # Load ticker data
 ticker_data = pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
@@ -124,7 +125,17 @@ if createData_button:
             
             st.write(test_data)
             st.success("Data berhasil dibuat!")   
-            # st.success("Proses selesai!") 
+            
+            progress_bar = st.progress(0)
+
+            # Loop untuk mengupdate progress bar
+            for i in range(500):
+                # Tunggu sebentar untuk simulasi proses
+                time.sleep(0.05)
+                
+                # Update progress bar
+                progress_bar.progress(i + 1)
+            st.success("Proses selesai!") 
             st.session_state.button_clicked = False
             st.button("Reset", on_click=swap)   
         else:
