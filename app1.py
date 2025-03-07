@@ -120,8 +120,8 @@ if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
         progress_bar = st.progress(0)
-        label_placeholder = st.empty()
-        label_placeholder.write("Proses pengunduhan data...")  # Label awal
+        label_placeholder1 = st.empty()
+        label_placeholder1.write("Proses pengunduhan data...")  # Label awal
         for i, ticker in enumerate(yahoo_ticker):
             try:
                 ticker_data = yf.download(ticker.split('.')[0], period="max")
@@ -132,7 +132,7 @@ if createData_button:
                 st.error(f"Error downloading data for {ticker}: {e}")
                 continue            
             progress_bar.progress(int((i + 1) / 30 * 100))  # Update progress bar
-        label_placeholder.empty()  # Menghapus label
+        label_placeholder1.empty()  # Menghapus label
         if len(portfolio_data) == 30:
             test_start_date = max([data.index.min() for data in portfolio_data])
             test_end_date = min([data.index.max() for data in portfolio_data])
@@ -148,11 +148,12 @@ if createData_button:
             
             progress_bar = st.progress(0)
             # Loop untuk mengupdate progress bar
-            label_placeholder.write("Proses get signal and test trade...")  # Label awal
+            label_placeholder2 = st.empty()
+            label_placeholder2.write("Proses get signal and test trade...")  # Label awal
             for i in range(100):
                 time.sleep(0.05)  # Tunggu sebentar untuk simulasi proses                
                 progress_bar.progress(i + 1)  # Update progress bar
-            label_placeholder.empty()  # Menghapus label
+            label_placeholder2.empty()  # Menghapus label
             st.success("Proses selesai!") 
             st.session_state.button_clicked = False
             st.button("Reset", on_click=swap)   
