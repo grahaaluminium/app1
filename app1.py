@@ -8,12 +8,12 @@ import yfinance as yf
 ticker_data = pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
 
 # UI Setup
-st.markdown("<div style='text-align: center; margin-top: -40px;'><img src='{}' width='120'></div>".format('https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'), unsafe_allow_html=True)
+st.markdown("<div style='text-align: center; margin-top: -40px;'><img src='https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png' width='120'></div>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; margin-top: 10px; font-size: 18px;'>Test me using any stock from any data source, any exchange, over any period.</p>", unsafe_allow_html=True)
 
 # Sidebar Menu
 def sidebar_menu():
-    st.sidebar.markdown("<div style='text-align: center; margin-top: -60px;'><img src='{}' width='150'></div>".format('https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'), unsafe_allow_html=True)
+    st.sidebar.markdown("<div style='text-align: center; margin-top: -60px;'><img src='https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png' width='150'></div>", unsafe_allow_html=True)
     st.sidebar.markdown("<p style='text-align: center;margin-top: 0px;font-size: 30px'><b>QUANTGENIUS</b></p>", unsafe_allow_html=True)
     st.sidebar.markdown("<p style='text-align: center;margin-top: -20px;font-size: 20px'>Artificial Superintelligence Quantitative Trading System</p>", unsafe_allow_html=True)
   
@@ -31,13 +31,12 @@ def sidebar_menu():
         dropdown_5 = st.selectbox('Initial Margin Requirement', options=[0.1, 0.2, 0.3])        
         dropdown_6 = st.selectbox('Margin Maintenance', options=[0.1, 0.2, 0.3])
 
-# Display sidebar
 sidebar_menu()
 
 def swap():
     st.session_state.target_lang = 'Yahoo Finance'
-    del st.session_state.yahoo_ticker
-    del st.session_state.test_data
+    st.session_state.pop('yahoo_ticker', None)
+    st.session_state.pop('test_data', None)
     st.session_state.button_clicked = False
 
 # Data Source Selection
@@ -62,34 +61,26 @@ if dropdown_dataSource == 'Local Data':
 # Handle Yahoo Finance
 elif dropdown_dataSource == 'Yahoo Finance':
     dropdown_yahooExchange = st.selectbox('Select Exchange', options=['nasdaq', 'nyse', 'nysemkt'])
-    
-    # Dropdown untuk memilih tahun mulai
     start_year = st.selectbox("Start Year:", options=[str(year) for year in range(1991, 2015)], index=0, key="start_year")
     
-    # Reset session state jika start_year berubah
     if "previous_start_year" not in st.session_state:
         st.session_state.previous_start_year = start_year
     if st.session_state.previous_start_year != start_year:
-        st.session_state.yahoo_ticker = []  # Reset session state
-        st.session_state.previous_start_year = start_year  # Update previous_start_year
+        st.session_state.yahoo_ticker = []
+        st.session_state.previous_start_year = start_year
     
-    # Filter options based on start year
     options = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
     
-    # Initialize session state for yahoo_ticker
     if 'yahoo_ticker' not in st.session_state:
         st.session_state.yahoo_ticker = []
     
-    # Random stock selection
     if st.button('Choose Random Stocks'):
         valid_tickers = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
         st.session_state.yahoo_ticker = random.sample(valid_tickers, 30)
     
-    # Multiselect widget with validated default values
     default_tickers = [ticker for ticker in st.session_state.yahoo_ticker if ticker in options]
     yahoo_ticker = st.multiselect('Select 30 Stocks or click `Choose Random Stocks` above', options, default=default_tickers)
     
-    # Validate selection
     if len(yahoo_ticker) > 30:
         st.error("Ticker yang anda pilih lebih dari 30")
     elif len(yahoo_ticker) == 30:
@@ -100,8 +91,7 @@ if 'button_clicked' not in st.session_state:
 
 def on_button_click():
     st.session_state.button_clicked = True
-    # st.write("Tombol telah diklik!")
-# Connect to QuantGenius AI Engine
+
 createData_button = st.button("Create Test Data and Run Test", on_click=on_button_click, disabled=st.session_state.button_clicked)
 
 if createData_button:
@@ -126,9 +116,7 @@ if createData_button:
                 for test_date in date_range
             ], index=date_range.date)
             
-            # Simpan test_data ke session state
             st.session_state.test_data = test_data
-            # st.write(st.session_state.test_data)
             st.success("Data berhasil dibuat!")            
             st.session_state.button_clicked = False
         else:
@@ -138,13 +126,8 @@ if createData_button:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
         st.session_state.button_clicked = False
 
-# Tampilkan test_data dari session state jika ada
 if 'test_data' in st.session_state:
-    # st.write("Data yang telah dibuat:")
     st.write(st.session_state.test_data)
-
-    # test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
-    # if test_button:
     st.success("Proses selesai!")
     st.button("Reset", on_click=swap)        
 
