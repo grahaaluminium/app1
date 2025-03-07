@@ -128,13 +128,13 @@ if createData_button:
             st.session_state.test_data = test_data
             # st.write(st.session_state.test_data)
             st.success("Data berhasil dibuat!")            
-            st.session_state.button_clicked = False
+            # st.session_state.button_clicked = False
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
-            st.session_state.button_clicked = False
+            # st.session_state.button_clicked = False
     else:
         st.error("Portfolio data anda belum ada atau belum dibuat !")
-        st.session_state.button_clicked = False
+        # st.session_state.button_clicked = False
 
 # Tampilkan test_data dari session state jika ada
 if 'test_data' in st.session_state:
@@ -142,8 +142,7 @@ if 'test_data' in st.session_state:
     st.write(st.session_state.test_data)
 
     st.success("Proses selesai!")
-    del st.session_state.test_data    
-    st.session_state.button_clicked = False
+    del st.session_state.test_data
     st.button("Reset", on_click=swap)        
 
 # Footer
