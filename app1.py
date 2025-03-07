@@ -120,6 +120,7 @@ if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
         progress_bar = st.progress(0)
+        st.write("Mengunduh data...")  # Label di atas progress bar
         for i, ticker in enumerate(yahoo_ticker):
             try:
                 ticker_data = yf.download(ticker.split('.')[0], period="max")
@@ -128,8 +129,7 @@ if createData_button:
                     portfolio_ticker.append(ticker)
             except Exception as e:
                 st.error(f"Error downloading data for {ticker}: {e}")
-                continue
-            st.write("Mengunduh data...")  # Label di atas progress bar
+                continue            
             progress_bar.progress(int((i + 1) / 30 * 100))  # Update progress bar
         
         if len(portfolio_data) == 30:
@@ -147,9 +147,9 @@ if createData_button:
             
             progress_bar = st.progress(0)
             # Loop untuk mengupdate progress bar
+            st.write("Get signal....")  # Label di atas progress bar
             for i in range(100):
-                time.sleep(0.05)  # Tunggu sebentar untuk simulasi proses
-                st.write("Get signal....")  # Label di atas progress bar
+                time.sleep(0.05)  # Tunggu sebentar untuk simulasi proses                
                 progress_bar.progress(i + 1)  # Update progress bar
             st.success("Proses selesai!") 
             st.session_state.button_clicked = False
