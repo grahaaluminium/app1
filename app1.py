@@ -129,7 +129,7 @@ if createData_button:
             progress_bar = st.progress(0)
 
             # Loop untuk mengupdate progress bar
-            for i in range(500):
+            for i in range(100):
                 # Tunggu sebentar untuk simulasi proses
                 time.sleep(0.05)
                 
