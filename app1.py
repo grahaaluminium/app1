@@ -129,6 +129,7 @@ if createData_button:
             except Exception as e:
                 st.error(f"Error downloading data for {ticker}: {e}")
                 continue
+            st.write("Mengunduh data...")  # Label di atas progress bar
             progress_bar.progress(int((i + 1) / 30 * 100))  # Update progress bar
         
         if len(portfolio_data) == 30:
@@ -148,6 +149,7 @@ if createData_button:
             # Loop untuk mengupdate progress bar
             for i in range(100):
                 time.sleep(0.05)  # Tunggu sebentar untuk simulasi proses
+                st.write("Get signal....")  # Label di atas progress bar
                 progress_bar.progress(i + 1)  # Update progress bar
             st.success("Proses selesai!") 
             st.session_state.button_clicked = False
