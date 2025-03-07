@@ -35,10 +35,7 @@ def sidebar_menu():
 sidebar_menu()
 
 def swap():
-    st.session_state.target_lang = 'Yahoo Finance'
-    del st.session_state.yahoo_ticker
-    del st.session_state.test_data
-    st.session_state.button_clicked = False
+    st.session_state.target_lang = 'Yahoo Finance'    
 
 # Data Source Selection
 dropdown_dataSource = st.selectbox('Select Data Source', options=['Yahoo Finance', 'Stooq', 'Tiingo', 'Alphavantage', 'Montecarlo Simulation', 'Local Data'], key="target_lang")  
@@ -145,6 +142,8 @@ if 'test_data' in st.session_state:
 
     st.success("Proses selesai!")
     del st.session_state.test_data
+    del st.session_state.yahoo_ticker
+    st.session_state.button_clicked = False
     st.button("Reset", on_click=swap)        
 
 # Footer
