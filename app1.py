@@ -80,14 +80,14 @@ elif dropdown_dataSource == 'Yahoo Finance':
     if 'yahoo_ticker' not in st.session_state:
         st.session_state.yahoo_ticker = []
     
+    # Multiselect widget with validated default values
+    default_tickers = [ticker for ticker in st.session_state.yahoo_ticker if ticker in options]
+    yahoo_ticker = st.multiselect('Select 30 Stocks or click `Choose Random Stocks` above', options, default=default_tickers)
+    
     # Random stock selection
     if st.button('Choose Random Stocks'):
         valid_tickers = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
         st.session_state.yahoo_ticker = random.sample(valid_tickers, 30)
-    
-    # Multiselect widget with validated default values
-    default_tickers = [ticker for ticker in st.session_state.yahoo_ticker if ticker in options]
-    yahoo_ticker = st.multiselect('Select 30 Stocks or click `Choose Random Stocks` above', options, default=default_tickers)
     
     # Validate selection
     if len(yahoo_ticker) > 30:
