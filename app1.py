@@ -104,6 +104,7 @@ createData_button = st.button("Create Test Data and Run Test", on_click=on_butto
 if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
+        progress_bar = st.progress(0)
         for ticker in yahoo_ticker:
             try:
                 ticker_data = yf.download(ticker.split('.')[0], period="max")
@@ -112,6 +113,8 @@ if createData_button:
                     portfolio_ticker.append(ticker)
             except Exception as e:
                 st.error(f"Error downloading data for {ticker}: {e}")
+            progress_bar.progress(i + (100/30))
+        
         
         if len(portfolio_data) == 30:
             test_start_date = max([data.index.min() for data in portfolio_data])
@@ -121,13 +124,12 @@ if createData_button:
             test_data = pd.DataFrame([
                 [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
                 for test_date in date_range
-            ], index=date_range.date)          
-            
+            ], index=date_range.date)
             st.write(test_data)
             st.success("Data berhasil dibuat!")   
             
+            
             progress_bar = st.progress(0)
-
             # Loop untuk mengupdate progress bar
             for i in range(100):
                 # Tunggu sebentar untuk simulasi proses
