@@ -119,8 +119,9 @@ createData_button = st.button("Create Test Data and Run Test", on_click=on_butto
 if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
-        progress_bar = st.progress(0)
         label_placeholder1 = st.empty()
+        progress_bar = label_placeholder1.progress(0)
+        
         label_placeholder1.write("Proses pengunduhan data...")  # Label awal
         for i, ticker in enumerate(yahoo_ticker):
             try:
@@ -146,9 +147,10 @@ if createData_button:
             st.write(test_data)
             # st.success("Data berhasil dibuat!")   
             
-            progress_bar = st.progress(0)
+            
             # Loop untuk mengupdate progress bar
             label_placeholder2 = st.empty()
+            progress_bar = label_placeholder2.progress(0)
             label_placeholder2.write("Proses get signal and test trade...")  # Label awal
             for i in range(100):
                 time.sleep(0.05)  # Tunggu sebentar untuk simulasi proses                
