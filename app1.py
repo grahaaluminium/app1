@@ -102,7 +102,7 @@ def on_button_click():
     st.session_state.button_clicked = True
     # st.write("Tombol telah diklik!")
 # Connect to QuantGenius AI Engine
-createData_button = st.button("Create Test Data", on_click=on_button_click, disabled=st.session_state.button_clicked)
+createData_button = st.button("Create Test Data and Run Test", on_click=on_button_click, disabled=st.session_state.button_clicked)
 
 if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
@@ -129,7 +129,7 @@ if createData_button:
             # Simpan test_data ke session state
             st.session_state.test_data = test_data
             # st.write(st.session_state.test_data)
-            st.success("Data berhasil dibuat!")
+            st.success("Data berhasil dibuat!")            
             st.session_state.button_clicked = False
         else:
             st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
@@ -143,10 +143,10 @@ if 'test_data' in st.session_state:
     # st.write("Data yang telah dibuat:")
     st.write(st.session_state.test_data)
 
-    test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
-    if test_button:
-        st.success("Proses selesai!")
-        st.button("Reset", on_click=swap)        
+    # test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
+    # if test_button:
+    st.success("Proses selesai!")
+    st.button("Reset", on_click=swap)        
 
 # Footer
 st.markdown("""
