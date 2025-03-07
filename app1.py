@@ -5,14 +5,10 @@ import datetime as dt
 import yfinance as yf
 
 # Load ticker data
-try:
-    ticker_data = pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
-except Exception as e:
-    st.error(f"Gagal memuat data ticker: {e}")
-    st.stop()
+ticker_data = pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
 
 # UI Setup
-st.markdown("<div style='text-align: center; margin-top: -40px;'><img src='{}' width='120'></div>".format('https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'), unsafe_allow_html=True)
+st.markdown("<div style='text-align: center; margin-top: -45px;'><img src='{}' width='120'></div>".format('https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'), unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; margin-top: 10px; font-size: 18px;'>Test me using any stock from any data source, any exchange, over any period.</p>", unsafe_allow_html=True)
 
 # Sidebar Menu
@@ -40,8 +36,8 @@ sidebar_menu()
 
 def swap():
     st.session_state.target_lang = 'Yahoo Finance'
-    st.session_state.yahoo_ticker = []
-    st.session_state.test_data = None
+    del st.session_state.yahoo_ticker
+    del st.session_state.test_data
     st.session_state.button_clicked = False
 
 # Data Source Selection
@@ -50,15 +46,16 @@ dropdown_dataSource = st.selectbox('Select Data Source', options=['Yahoo Finance
 # Handle Local Data
 if dropdown_dataSource == 'Local Data':
     uploaded_files = st.file_uploader("Choose 30 stock file for your portfolio", type=["txt", "csv"], accept_multiple_files=True)
+    if 'uploaded_files' not in st.session_state:
+        st.session_state.uploaded_files = []
     if uploaded_files:
-        unique_files = set()
         for uploaded_file in uploaded_files:
-            if uploaded_file.name in unique_files:
-                st.error(f"File '{uploaded_file.name}' sudah diunggah!")
+            if uploaded_file.name in st.session_state.uploaded_files:
+                st.error(f"File dengan nama '{uploaded_file.name}' sudah ada!, buang file tersebut")
             else:
-                unique_files.add(uploaded_file.name)
-        if len(unique_files) < 30:
-            st.error(f"Total file yang diunggah kurang {30 - len(unique_files)} file.")
+                st.session_state.uploaded_files.append(uploaded_file.name)
+        if len(uploaded_files) < 4:
+            st.write(f"Total file yang dipilih kurang {4-len(uploaded_files)} file")
         else:
             st.success("Proses selesai!")
 
@@ -73,8 +70,8 @@ elif dropdown_dataSource == 'Yahoo Finance':
     if "previous_start_year" not in st.session_state:
         st.session_state.previous_start_year = start_year
     if st.session_state.previous_start_year != start_year:
-        st.session_state.yahoo_ticker = []
-        st.session_state.previous_start_year = start_year
+        st.session_state.yahoo_ticker = []  # Reset session state
+        st.session_state.previous_start_year = start_year  # Update previous_start_year
     
     # Filter options based on start year
     options = [stock for stock in ticker_data[dropdown_yahooExchange].tolist() if dt.datetime.strptime(stock.split(',')[1], '%Y%m%d').year < int(start_year)]
@@ -103,7 +100,7 @@ if 'button_clicked' not in st.session_state:
 
 def on_button_click():
     st.session_state.button_clicked = True
-
+    # st.write("Tombol telah diklik!")
 # Connect to QuantGenius AI Engine
 createData_button = st.button("Create Test Data", on_click=on_button_click, disabled=st.session_state.button_clicked)
 
@@ -112,10 +109,9 @@ if createData_button:
         portfolio_data, portfolio_ticker = [], []
         for ticker in yahoo_ticker:
             try:
-                ticker_symbol = ticker.split('.')[0].upper()
-                ticker_data = yf.download(ticker_symbol, period="max")
+                ticker_data = yf.download(ticker.split('.')[0], period="max")
                 if len(ticker_data) > 100 and ticker not in portfolio_ticker:
-                    portfolio_data.append(ticker_data['Close'])
+                    portfolio_data.append(ticker_data['Close'][ticker.split('.')[0].upper()])
                     portfolio_ticker.append(ticker)
             except Exception as e:
                 st.error(f"Error downloading data for {ticker}: {e}")
@@ -123,22 +119,28 @@ if createData_button:
         if len(portfolio_data) == 30:
             test_start_date = max([data.index.min() for data in portfolio_data])
             test_end_date = min([data.index.max() for data in portfolio_data])
-            date_range = pd.date_range(test_start_date, test_end_date, freq='B')  # Hanya hari kerja
-            test_data = pd.DataFrame({
-                ticker: data.reindex(date_range, method='ffill') for ticker, data in zip(portfolio_ticker, portfolio_data)
-            })
+            date_range = pd.date_range(test_start_date, test_end_date)
+            date_range = date_range[~date_range.weekday.isin([5, 6])]  # Exclude weekends
+            test_data = pd.DataFrame([
+                [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
+                for test_date in date_range
+            ], index=date_range.date)
+            
+            # Simpan test_data ke session state
             st.session_state.test_data = test_data
+            # st.write(st.session_state.test_data)
             st.success("Data berhasil dibuat!")
             st.session_state.button_clicked = False
         else:
-            st.error(f"Portfolio data anda belum lengkap! Kurang {30 - len(portfolio_data)} saham.")
+            st.error(f"Portfolio data anda belum kurang {30-len(portfolio_data)} !")
             st.session_state.button_clicked = False
     else:
-        st.error("Portfolio data anda belum ada atau belum dibuat!")
+        st.error("Portfolio data anda belum ada atau belum dibuat !")
         st.session_state.button_clicked = False
 
 # Tampilkan test_data dari session state jika ada
 if 'test_data' in st.session_state:
+    # st.write("Data yang telah dibuat:")
     st.write(st.session_state.test_data)
 
     test_button = st.button("Connect to QuantGenius AI engine for real-time trade signals")
