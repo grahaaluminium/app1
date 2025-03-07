@@ -144,7 +144,7 @@ if createData_button:
             ], index=date_range.date)
             test_data = test_data.dropna()  # Hapus baris yang mengandung NaN
             st.write(test_data)
-            st.success("Data berhasil dibuat!")   
+            # st.success("Data berhasil dibuat!")   
             
             progress_bar = st.progress(0)
             # Loop untuk mengupdate progress bar
