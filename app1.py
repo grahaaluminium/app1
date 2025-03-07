@@ -105,7 +105,9 @@ if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
         progress_bar = st.progress(0)
+        i=0
         for ticker in yahoo_ticker:
+            i += 1
             try:
                 ticker_data = yf.download(ticker.split('.')[0], period="max")
                 if len(ticker_data) > 100 and ticker not in portfolio_ticker:
