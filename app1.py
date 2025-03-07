@@ -8,7 +8,7 @@ import yfinance as yf
 ticker_data = pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
 
 # UI Setup
-st.markdown("<div style='text-align: center; margin-top: -53px;'><img src='{}' width='120'></div>".format('https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'), unsafe_allow_html=True)
+st.markdown("<div style='text-align: center; margin-top: -40px;'><img src='{}' width='120'></div>".format('https://e7.pngegg.com/pngimages/589/237/png-clipart-orange-and-brown-ai-logo-area-text-symbol-adobe-ai-text-trademark-thumbnail.png'), unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; margin-top: 10px; font-size: 18px;'>Test me using any stock from any data source, any exchange, over any period.</p>", unsafe_allow_html=True)
 
 # Sidebar Menu
@@ -87,7 +87,7 @@ elif dropdown_dataSource == 'Yahoo Finance':
     
     # Multiselect widget with validated default values
     default_tickers = [ticker for ticker in st.session_state.yahoo_ticker if ticker in options]
-    yahoo_ticker = st.multiselect(f'Select 30 Stocks or click {st.button('Choose Random Stocks')} above', options, default=default_tickers)
+    yahoo_ticker = st.multiselect('Select 30 Stocks or click `Choose Random Stocks` above', options, default=default_tickers)
     
     # Validate selection
     if len(yahoo_ticker) > 30:
