@@ -4,6 +4,10 @@ import random
 import datetime as dt
 import yfinance as yf
 import time
+import logging
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
 
 # Load ticker data
 ticker_data = pd.read_csv('https://raw.githubusercontent.com/guangyoung/dataStock/refs/heads/main/stooq_tickers.csv')
@@ -37,7 +41,12 @@ sidebar_menu()
 
 def swap():
     st.session_state.target_lang = 'Yahoo Finance'   
-    del st.session_state.yahoo_ticker 
+    if 'yahoo_ticker' in st.session_state:
+        del st.session_state.yahoo_ticker
+    if 'button_clicked' in st.session_state:
+        del st.session_state.button_clicked
+    if 'uploaded_files' in st.session_state:
+        del st.session_state.uploaded_files
 
 # Data Source Selection
 dropdown_dataSource = st.selectbox('Select Data Source', options=['Yahoo Finance', 'Stooq', 'Tiingo', 'Alphavantage', 'Montecarlo Simulation', 'Local Data'], key="target_lang")  
@@ -52,7 +61,12 @@ if dropdown_dataSource == 'Local Data':
             if uploaded_file.name in st.session_state.uploaded_files:
                 st.error(f"File dengan nama '{uploaded_file.name}' sudah ada!, buang file tersebut")
             else:
-                st.session_state.uploaded_files.append(uploaded_file.name)
+                try:
+                    # Validasi file
+                    df = pd.read_csv(uploaded_file)
+                    st.session_state.uploaded_files.append(uploaded_file.name)
+                except Exception as e:
+                    st.error(f"File {uploaded_file.name} tidak valid: {e}")
         if len(uploaded_files) < 4:
             st.write(f"Total file yang dipilih kurang {4-len(uploaded_files)} file")
         else:
@@ -90,7 +104,7 @@ elif dropdown_dataSource == 'Yahoo Finance':
     
     # Validate selection
     if len(yahoo_ticker) > 30:
-        st.error("Ticker yang anda pilih lebih dari 30")
+        st.error("Anda hanya dapat memilih maksimal 30 saham. Silakan hapus beberapa saham dari pilihan Anda.")
     elif len(yahoo_ticker) == 30:
         st.success("30 saham telah dipilih, mohon tunggu proses reconstruct data!")
 
@@ -99,15 +113,14 @@ if 'button_clicked' not in st.session_state:
 
 def on_button_click():
     st.session_state.button_clicked = True
+
 createData_button = st.button("Create Test Data and Run Test", on_click=on_button_click, disabled=st.session_state.button_clicked)
 
 if createData_button:
     if dropdown_dataSource == 'Yahoo Finance' and len(yahoo_ticker) == 30:
         portfolio_data, portfolio_ticker = [], []
         progress_bar = st.progress(0)
-        i=0
-        for ticker in yahoo_ticker:
-            i += 1
+        for i, ticker in enumerate(yahoo_ticker):
             try:
                 ticker_data = yf.download(ticker.split('.')[0], period="max")
                 if len(ticker_data) > 100 and ticker not in portfolio_ticker:
@@ -115,8 +128,8 @@ if createData_button:
                     portfolio_ticker.append(ticker)
             except Exception as e:
                 st.error(f"Error downloading data for {ticker}: {e}")
-            progress_bar.progress(i + (100/30))
-        
+                continue
+            progress_bar.progress(int((i + 1) / 30 * 100))  # Update progress bar
         
         if len(portfolio_data) == 30:
             test_start_date = max([data.index.min() for data in portfolio_data])
@@ -127,18 +140,15 @@ if createData_button:
                 [data.loc[test_date] if test_date in data.index else data.loc[:test_date].iloc[-1] for data in portfolio_data]
                 for test_date in date_range
             ], index=date_range.date)
+            test_data = test_data.dropna()  # Hapus baris yang mengandung NaN
             st.write(test_data)
             st.success("Data berhasil dibuat!")   
-            
             
             progress_bar = st.progress(0)
             # Loop untuk mengupdate progress bar
             for i in range(100):
-                # Tunggu sebentar untuk simulasi proses
-                time.sleep(0.05)
-                
-                # Update progress bar
-                progress_bar.progress(i + 1)
+                time.sleep(0.05)  # Tunggu sebentar untuk simulasi proses
+                progress_bar.progress(i + 1)  # Update progress bar
             st.success("Proses selesai!") 
             st.session_state.button_clicked = False
             st.button("Reset", on_click=swap)   
